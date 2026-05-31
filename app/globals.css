@@ -1,0 +1,320 @@
+@import "tailwindcss";
+
+/* ============================================
+   LUMEN LABS — DISCOVERY (32-BIT CINEMATIC RPG)
+   Premium 2026 Obsidian + Electric Design System
+   Mirrored exactly from Lumen marketing for "powered by" consistency
+   + Heavy 32-bit / CRT constraints for the game canvas & UI
+   ============================================ */
+
+:root {
+  /* === Core Lumen Obsidian / Earthy Palette === */
+  --bg: #07080c;
+  --bg-2: #0d0f15;
+  --bg-3: #141722;
+  --bg-card: rgba(13, 15, 21, 0.85);
+  --glass: rgba(10, 12, 18, 0.72);
+
+  /* === Electric Lumen Accents (exact match) === */
+  --electric: #00f2fe;
+  --electric-dim: rgba(0, 242, 254, 0.12);
+  --electric-glow: rgba(0, 242, 254, 0.35);
+  --electric-border: rgba(0, 242, 254, 0.25);
+
+  --volt: #7fff00;
+  --volt-dim: rgba(127, 255, 0, 0.12);
+  --volt-glow: rgba(127, 255, 0, 0.28);
+
+  --gold: #ff9f00;
+  --gold-light: #f0d878;
+  --gold-dim: rgba(255, 159, 0, 0.15);
+  --gold-border: rgba(232, 200, 74, 0.25);
+
+  /* Text */
+  --text-1: #f8fafc;
+  --text-2: #94a3b8;
+  --text-3: #475569;
+  --text-faint: #64748b;
+
+  /* Borders & Glass */
+  --border-1: rgba(255, 255, 255, 0.06);
+  --border-2: rgba(255, 255, 255, 0.12);
+  --border-electric: rgba(0, 242, 254, 0.2);
+
+  /* Radii (Lumen premium) */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+
+  /* Typography (Lumen cinematic) */
+  --font-head: var(--font-syne), system-ui, sans-serif;
+  --font-body: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-space-mono), monospace;
+
+  /* 32-bit Game Specific */
+  --pixel: 3; /* base scale factor for chunky feel */
+  --scanline-opacity: 0.08;
+  --crt-vignette: rgba(0, 0, 0, 0.35);
+}
+
+/* Force dark cinematic base */
+html, body {
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: var(--font-body);
+}
+
+h1, h2, .display, .title {
+  font-family: var(--font-head);
+  letter-spacing: -0.025em;
+}
+
+/* ============================================
+   LUMEN PREMIUM COMPONENTS (recreated for grokgame)
+   ============================================ */
+
+.glass-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.6);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--electric) 0%, #00bfff 100%);
+  color: #020408;
+  box-shadow: 0 0 25px var(--electric-dim);
+  font-weight: 700;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--volt) 0%, #00e5ff 100%);
+  box-shadow: 0 0 45px var(--electric-glow), 0 0 80px rgba(0, 242, 254, 0.15);
+  transform: translateY(-2px) scale(1.01);
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-2);
+  border: 1px solid var(--border-1);
+}
+
+.btn-ghost:hover {
+  border-color: var(--electric);
+  color: var(--electric);
+  background: var(--electric-dim);
+  box-shadow: 0 0 15px var(--electric-dim);
+}
+
+.btn-gold {
+  background: rgba(255, 159, 0, 0.08);
+  color: var(--gold-light);
+  border: 1px solid var(--gold-border);
+}
+
+.btn-gold:hover {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+  color: #fff;
+}
+
+/* Eyebrow / Terminal Labels (Lumen mono style) */
+.eyebrow, .terminal-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--electric);
+}
+
+.eyebrow-gold {
+  color: var(--gold);
+}
+
+/* Hero / Title cinematic elements */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--border-electric);
+  border-radius: var(--radius-pill);
+  background: var(--electric-dim);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+.hero-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--electric);
+  box-shadow: 0 0 8px var(--electric);
+  animation: pulse-electric 2s infinite ease-in-out;
+}
+
+@keyframes pulse-electric {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ============================================
+   32-BIT + CRT GAME UI ELEMENTS
+   ============================================ */
+
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.crt-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  background: 
+    linear-gradient(rgba(0,0,0,var(--scanline-opacity)) 50%, transparent 50%),
+    linear-gradient(90deg, rgba(0,0,0,0.03) 50%, transparent 50%);
+  background-size: 100% 4px, 3px 100%;
+  box-shadow: inset 0 0 120px var(--crt-vignette);
+  mix-blend-mode: screen;
+}
+
+/* Scanlines stronger for pure game canvas */
+.scanlines-strong {
+  background: repeating-linear-gradient(
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.18) 3px,
+    rgba(0, 0, 0, 0.18) 4px
+  );
+  pointer-events: none;
+}
+
+.letterbox {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 14%;
+  background: #000;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.letterbox.top { top: 0; }
+.letterbox.bottom { bottom: 0; }
+
+/* Chunky 32-bit borders for panels inside game */
+.retro-border {
+  border: 4px solid #1a1f2e;
+  box-shadow: 
+    inset 0 0 0 2px #3a4258,
+    0 0 0 2px #0a0c12;
+  background: #0f121a;
+}
+
+/* Dialogue / Terminal typewriter style */
+.typewriter {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+}
+
+/* Character Creator specific */
+.creator-option {
+  transition: all 0.12s cubic-bezier(0.23,1,0.32,1);
+  border: 2px solid var(--border-1);
+  background: rgba(255,255,255,0.015);
+}
+
+.creator-option:hover {
+  border-color: var(--electric);
+  background: var(--electric-dim);
+  transform: translateY(-1px);
+}
+
+.creator-option.selected {
+  border-color: var(--electric);
+  background: rgba(0, 242, 254, 0.08);
+  box-shadow: 0 0 0 1px var(--electric);
+}
+
+.creator-option .label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--text-2);
+}
+
+/* Canvas preview frames */
+.preview-frame {
+  border: 6px solid #1a1f2e;
+  background: #0a0c12;
+  box-shadow: 
+    0 0 0 2px #3a4258,
+    inset 0 0 40px rgba(0,0,0,0.6);
+  image-rendering: pixelated;
+}
+
+/* ============================================
+   CINEMATIC TRANSITIONS & OVERLAYS
+   ============================================ */
+
+.cinematic-fade {
+  transition: opacity 400ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.terminal-boot {
+  font-family: var(--font-mono);
+  letter-spacing: 1.5px;
+}
+
+/* Subtle ambient grid for title/creator (Lumen architectural) */
+.ambient-grid {
+  background-image: 
+    linear-gradient(rgba(0,242,254,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,242,254,0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  pointer-events: none;
+}
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+
+.glow-electric { text-shadow: 0 0 8px var(--electric-glow); }
+.glow-gold { text-shadow: 0 0 8px var(--gold-dim); }
+
+.text-electric { color: var(--electric); }
+.text-volt { color: var(--volt); }
+.text-gold { color: var(--gold-light); }
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--electric);
+  text-transform: uppercase;
+}

@@ -33,10 +33,9 @@ This is not a prototype. It is a complete, polished 15–25 minute experience de
 
 ---
 
-## How to Run
+## How to Run Locally
 
 ```bash
-cd grokgame
 npm install
 npm run dev
 ```
@@ -46,6 +45,19 @@ Open **http://localhost:3000**
 1. Create your Khalil Wright (go wild — the sprite will reflect every choice).
 2. Begin the journey.
 3. Experience the full first attunement loop, including real video cutscenes and reactive systems.
+
+## Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAntlo314%2Fgrokgame2.0)
+
+One-click deploy to Vercel. The project is already optimized for it (long-term video caching is configured).
+
+**Recommended settings on Vercel:**
+- Framework: Next.js (auto-detected)
+- Root Directory: `.`
+- No environment variables required
+
+The four video cutscenes are pre-committed and will be served with proper caching headers.
 
 ---
 

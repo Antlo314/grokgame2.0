@@ -35,8 +35,8 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DISCOVERY | A Lumen Labs Experience",
-  description: "A cinematic 32-bit RPG. In 2026, one man discovers the artifacts that will forge the hero the world needs. Powered by Lumen Labs.",
+  title: "DISCOVERY",
+  description: "A cinematic 32-bit top-down RPG. In 2026, one man discovers ancient artifacts tied to resilience and power. A premium vertical slice experience.",
   icons: {
     icon: "/favicon.ico",
   },

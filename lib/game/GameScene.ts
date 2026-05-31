@@ -28,6 +28,12 @@ export class GameScene extends Phaser.Scene {
   private hasTrail = false;
   private trailGraphics?: Phaser.GameObjects.Graphics;
 
+  // Second Memory Echo point (extends the experience)
+  private echoPoint?: { x: number; y: number };
+  private echoGlow?: Phaser.GameObjects.Graphics;
+  private echoPrompt?: Phaser.GameObjects.Text;
+  private echoActivated = false;
+
   constructor() {
     super({ key: 'GameScene' });
   }
@@ -104,10 +110,10 @@ export class GameScene extends Phaser.Scene {
     }).setOrigin(0.5).setVisible(false);
 
     // Store for update loop
-    this['echoPoint'] = echoPoint;
-    this['echoGlow'] = echoGlow;
-    this['echoPrompt'] = echoPrompt;
-    this['echoActivated'] = false;
+    this.echoPoint = echoPoint;
+    this.echoGlow = echoGlow;
+    this.echoPrompt = echoPrompt;
+    this.echoActivated = false;
 
     // Player (custom from character creation)
     const startX = this.registry.get('startX') || 110;
@@ -149,9 +155,9 @@ export class GameScene extends Phaser.Scene {
           this.startAttunement();
         } else if (this.isNearElder()) {
           this.interactWithElder();
-        } else if (this['echoPoint'] && !this['echoActivated']) {
-          const dx = this.player.x - this['echoPoint'].x;
-          const dy = this.player.y - this['echoPoint'].y;
+        } else if (this.echoPoint && !this.echoActivated) {
+          const dx = this.player.x - this.echoPoint.x;
+          const dy = this.player.y - this.echoPoint.y;
           if (Math.sqrt(dx * dx + dy * dy) < 36) {
             this.activateEcho();
           }
@@ -284,9 +290,9 @@ export class GameScene extends Phaser.Scene {
   }
 
   private activateEcho() {
-    this['echoActivated'] = true;
-    this['echoPrompt'].destroy();
-    this['echoGlow'].destroy();
+    this.echoActivated = true;
+    this.echoPrompt?.destroy();
+    this.echoGlow?.destroy();
 
     audio.playPowerUp();
 
@@ -521,29 +527,27 @@ export class GameScene extends Phaser.Scene {
     }
 
     // Second memory echo interaction (extends playtime)
-    if (this['echoPoint'] && !this['echoActivated']) {
-      const dx = this.player.x - this['echoPoint'].x;
-      const dy = this.player.y - this['echoPoint'].y;
+    if (this.echoPoint && !this.echoActivated) {
+      const dx = this.player.x - this.echoPoint.x;
+      const dy = this.player.y - this.echoPoint.y;
       const nearEcho = Math.sqrt(dx * dx + dy * dy) < 32;
 
       if (nearEcho) {
-        this['echoPrompt'].setText('E — TOUCH THE ECHO');
-        this['echoPrompt'].setVisible(true);
-        this['echoGlow'].clear();
-        this['echoGlow'].fillStyle(0x7fff00, 0.85);
-        this['echoGlow'].fillCircle(this['echoPoint'].x, this['echoPoint'].y, 8);
-        this['echoGlow'].fillStyle(0x7fff00, 0.35);
-        this['echoGlow'].fillCircle(this['echoPoint'].x, this['echoPoint'].y, 14);
+        this.echoPrompt?.setText('E — TOUCH THE ECHO');
+        this.echoPrompt?.setVisible(true);
+        this.echoGlow?.clear();
+        this.echoGlow?.fillStyle(0x7fff00, 0.85);
+        this.echoGlow?.fillCircle(this.echoPoint.x, this.echoPoint.y, 8);
+        this.echoGlow?.fillStyle(0x7fff00, 0.35);
+        this.echoGlow?.fillCircle(this.echoPoint.x, this.echoPoint.y, 14);
       } else {
-        this['echoPrompt'].setVisible(false);
-        this['echoGlow'].clear();
-        this['echoGlow'].fillStyle(0x7fff00, 0.5);
-        this['echoGlow'].fillCircle(this['echoPoint'].x, this['echoPoint'].y, 7);
-        this['echoGlow'].fillStyle(0x7fff00, 0.22);
-        this['echoGlow'].fillCircle(this['echoPoint'].x, this['echoPoint'].y, 12);
+        this.echoPrompt?.setVisible(false);
+        this.echoGlow?.clear();
+        this.echoGlow?.fillStyle(0x7fff00, 0.5);
+        this.echoGlow?.fillCircle(this.echoPoint.x, this.echoPoint.y, 7);
+        this.echoGlow?.fillStyle(0x7fff00, 0.22);
+        this.echoGlow?.fillCircle(this.echoPoint.x, this.echoPoint.y, 12);
       }
-
-      // Activate on E press (we need to handle key in the existing input block)
     }
 
     // Footsteps (smooth rhythm)

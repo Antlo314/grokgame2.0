@@ -88,19 +88,26 @@ export class GameScene extends Phaser.Scene {
       align: 'center',
     }).setOrigin(0.5).setVisible(false);
 
-    // Second teaser glowing point (future memory location — more world density)
-    const teaser = this.add.graphics();
-    teaser.fillStyle(0x7fff00, 0.45);
-    teaser.fillCircle(480, 95, 6);
-    teaser.fillStyle(0x7fff00, 0.2);
-    teaser.fillCircle(480, 95, 11);
+    // Second memory echo point — gives a small permanent visual upgrade (extends the experience)
+    const echoPoint = { x: 480, y: 95 };
+    const echoGlow = this.add.graphics();
+    echoGlow.fillStyle(0x7fff00, 0.5);
+    echoGlow.fillCircle(echoPoint.x, echoPoint.y, 7);
+    echoGlow.fillStyle(0x7fff00, 0.22);
+    echoGlow.fillCircle(echoPoint.x, echoPoint.y, 12);
 
-    this.add.text(480, 68, '??', {
+    const echoPrompt = this.add.text(echoPoint.x, echoPoint.y - 26, '', {
       fontFamily: 'monospace',
       fontSize: '7px',
       color: '#7fff00',
       align: 'center',
-    }).setOrigin(0.5);
+    }).setOrigin(0.5).setVisible(false);
+
+    // Store for update loop
+    this['echoPoint'] = echoPoint;
+    this['echoGlow'] = echoGlow;
+    this['echoPrompt'] = echoPrompt;
+    this['echoActivated'] = false;
 
     // Player (custom from character creation)
     const startX = this.registry.get('startX') || 110;
@@ -142,6 +149,12 @@ export class GameScene extends Phaser.Scene {
           this.startAttunement();
         } else if (this.isNearElder()) {
           this.interactWithElder();
+        } else if (this['echoPoint'] && !this['echoActivated']) {
+          const dx = this.player.x - this['echoPoint'].x;
+          const dy = this.player.y - this['echoPoint'].y;
+          if (Math.sqrt(dx * dx + dy * dy) < 36) {
+            this.activateEcho();
+          }
         }
       }
     });
@@ -267,6 +280,32 @@ export class GameScene extends Phaser.Scene {
           ? "There are more relics sleeping under the city. Keep walking. Keep listening."
           : "Find what was buried. When you carry the rhythm, the city will open to you.",
       });
+    });
+  }
+
+  private activateEcho() {
+    this['echoActivated'] = true;
+    this['echoPrompt'].destroy();
+    this['echoGlow'].destroy();
+
+    audio.playPowerUp();
+
+    // Small permanent visual upgrade to the world
+    const bonusLey = this.add.graphics();
+    bonusLey.lineStyle(2, 0xff9f00, 0.55);
+    bonusLey.lineBetween(85, 172, 195, 148);
+    bonusLey.lineBetween(310, 155, 455, 185);
+
+    gameEventBus.emit('show-dialogue', {
+      speaker: 'MEMORY ECHO',
+      text: "Another fragment recognizes you. The city brightens where you walk.",
+    });
+
+    useGameStore.getState().addJournalEntry({
+      id: 'j_echo_01',
+      title: "Second Echo",
+      body: "Even the smallest lights remember. The network grows stronger with every step I take.",
+      category: 'Historical',
     });
   }
 
@@ -479,6 +518,32 @@ export class GameScene extends Phaser.Scene {
       this.elderPrompt.setVisible(true);
     } else {
       this.elderPrompt?.setVisible(false);
+    }
+
+    // Second memory echo interaction (extends playtime)
+    if (this['echoPoint'] && !this['echoActivated']) {
+      const dx = this.player.x - this['echoPoint'].x;
+      const dy = this.player.y - this['echoPoint'].y;
+      const nearEcho = Math.sqrt(dx * dx + dy * dy) < 32;
+
+      if (nearEcho) {
+        this['echoPrompt'].setText('E — TOUCH THE ECHO');
+        this['echoPrompt'].setVisible(true);
+        this['echoGlow'].clear();
+        this['echoGlow'].fillStyle(0x7fff00, 0.85);
+        this['echoGlow'].fillCircle(this['echoPoint'].x, this['echoPoint'].y, 8);
+        this['echoGlow'].fillStyle(0x7fff00, 0.35);
+        this['echoGlow'].fillCircle(this['echoPoint'].x, this['echoPoint'].y, 14);
+      } else {
+        this['echoPrompt'].setVisible(false);
+        this['echoGlow'].clear();
+        this['echoGlow'].fillStyle(0x7fff00, 0.5);
+        this['echoGlow'].fillCircle(this['echoPoint'].x, this['echoPoint'].y, 7);
+        this['echoGlow'].fillStyle(0x7fff00, 0.22);
+        this['echoGlow'].fillCircle(this['echoPoint'].x, this['echoPoint'].y, 12);
+      }
+
+      // Activate on E press (we need to handle key in the existing input block)
     }
 
     // Footsteps (smooth rhythm)

@@ -181,10 +181,18 @@ export default function CharacterCreator({ onComplete, onBack }: CharacterCreato
     const headW = isPortrait ? 22 : 18;
     const headH = isPortrait ? 24 : 19;
 
-    // === BODY / CLOTHING (chunky rects + dither) ===
+    // Body type variation based on presentation (less blocky, more character)
+    let shoulderW = isPortrait ? 30 : 26;
+    let torsoH = isPortrait ? 22 : 28;
+    if (presentation === 'feminine') {
+      shoulderW *= 0.92;
+      torsoH *= 0.95;
+    } else if (presentation === 'masculine') {
+      shoulderW *= 1.08;
+    }
+
+    // === BODY / CLOTHING (much richer 32-bit style) ===
     const bodyTop = headY + headH - 4;
-    const shoulderW = isPortrait ? 30 : 26;
-    const torsoH = isPortrait ? 22 : 28;
 
     // Torso base
     ctx.fillStyle = clothDark;
@@ -222,14 +230,18 @@ export default function CharacterCreator({ onComplete, onBack }: CharacterCreato
       ctx.fillRect(cx - 4, bodyTop + 3, 8, torsoH - 6);
     }
 
-    // Arms (with simple cuffs)
+    // Arms (detailed with cuffs and shading)
     ctx.fillStyle = skin;
     const armY = bodyTop + 4;
-    ctx.fillRect(cx - shoulderW/2 - 6, armY, 6, 14);
-    ctx.fillRect(cx + shoulderW/2, armY, 6, 14);
+    ctx.fillRect(cx - shoulderW/2 - 7, armY, 7, 15);
+    ctx.fillRect(cx + shoulderW/2, armY, 7, 15);
     ctx.fillStyle = clothDark;
-    ctx.fillRect(cx - shoulderW/2 - 6, armY + 11, 6, 3);
-    ctx.fillRect(cx + shoulderW/2, armY + 11, 6, 3);
+    ctx.fillRect(cx - shoulderW/2 - 7, armY + 12, 7, 4);
+    ctx.fillRect(cx + shoulderW/2, armY + 12, 7, 4);
+    // Subtle arm shading for less blocky look
+    ctx.fillStyle = shadow;
+    ctx.fillRect(cx - shoulderW/2 - 7, armY + 3, 2, 8);
+    ctx.fillRect(cx + shoulderW/2 + 5, armY + 3, 2, 8);
 
     // === HEAD (much more detailed face) ===
     ctx.fillStyle = skin;
@@ -276,67 +288,68 @@ export default function CharacterCreator({ onComplete, onBack }: CharacterCreato
       ctx.fillRect(cx - 5, lipY + 1, 10, 1);
     }
 
-    // === HAIR (greatly improved detail) ===
+    // === HAIR (TREMENDOUSLY more detailed and less blocky) ===
     ctx.fillStyle = hair;
     const hairY = headY - 2;
 
     if (hairStyle.id === 'long_locs' || hairStyle.id === 'back_locs') {
-      // Long locs with better volume and detail
-      for (let i = -7; i <= 7; i += 2.5) {
-        ctx.fillRect(cx + i - 1, hairY - 5, 2.5, 34);
-        // Add variation for more organic look
-        ctx.fillRect(cx + i - 0.5, hairY - 3, 1.5, 30);
+      // Highly detailed long locs with volume, individual strands, and beads
+      for (let i = -8; i <= 8; i += 2.2) {
+        ctx.fillRect(cx + i - 1.2, hairY - 6, 2.8, 36);
+        ctx.fillRect(cx + i - 0.6, hairY - 4, 1.8, 32);
         ctx.fillStyle = hairAccent;
-        ctx.fillRect(cx + i, hairY + 22, 1.2, 6); // beads
+        ctx.fillRect(cx + i, hairY + 24, 1.4, 7);
         ctx.fillStyle = hair;
       }
     } else if (hairStyle.id.includes('afro') || hairStyle.id.includes('puff')) {
-      // Much more detailed afro/puff with volume
-      ctx.fillRect(cx - 14, hairY - 12, 28, 22);
+      // Rich, voluminous afro with multiple texture layers and natural shape
+      ctx.fillRect(cx - 15, hairY - 13, 30, 24);
       ctx.fillStyle = hairAccent;
-      // Multiple layers of texture for richer look
-      for (let x = -12; x < 13; x += 2) {
-        for (let y = -10; y < 8; y += 2) {
-          if ((x + y) % 3 !== 0) {
-            ctx.fillRect(cx + x, hairY + y - 1, 1, 1);
+      // Dense dither texture for organic feel
+      for (let x = -13; x < 14; x += 1.5) {
+        for (let y = -11; y < 9; y += 1.5) {
+          if (Math.random() > 0.35) {
+            ctx.fillRect(cx + x, hairY + y - 1, 1.2, 1.2);
           }
         }
       }
       ctx.fillStyle = hair;
+      // Outer shape definition
+      ctx.fillRect(cx - 14, hairY - 12, 4, 20);
+      ctx.fillRect(cx + 10, hairY - 12, 4, 20);
     } else if (hairStyle.id.includes('braids') || hairStyle.id.includes('cornrows')) {
-      // Much better braids/cornrows with pattern
-      ctx.fillRect(cx - 11, hairY - 3, 22, 7);
+      // Intricate, high-detail braids/cornrows with pattern and shine
+      ctx.fillRect(cx - 12, hairY - 4, 24, 8);
       ctx.fillStyle = hairAccent;
-      for (let i = -9; i <= 9; i += 3) {
-        ctx.fillRect(cx + i - 0.5, hairY + 4, 1.5, 18);
-        ctx.fillRect(cx + i + 0.5, hairY + 6, 1, 14);
+      for (let i = -9; i <= 9; i += 2.5) {
+        ctx.fillRect(cx + i - 0.6, hairY + 3, 1.8, 20);
+        ctx.fillRect(cx + i + 0.4, hairY + 5, 1, 16);
       }
       ctx.fillStyle = hair;
     } else if (hairStyle.id.includes('fade') || hairStyle.id === 'curly_taper') {
-      // Better fades with more shape
-      ctx.fillRect(cx - 11, hairY - 2, 22, 6);
+      // Sharp, stylish fades with texture and shape
+      ctx.fillRect(cx - 12, hairY - 3, 24, 7);
       ctx.fillStyle = hairAccent;
-      ctx.fillRect(cx - 7, hairY - 5, 14, 4);
+      ctx.fillRect(cx - 8, hairY - 6, 16, 5);
       ctx.fillStyle = hair;
-      ctx.fillRect(cx - 4, hairY - 7, 8, 3);
+      ctx.fillRect(cx - 5, hairY - 8, 10, 3);
     } else if (hairStyle.id === 'bald_crown') {
       ctx.fillStyle = '#1F1A18';
-      ctx.fillRect(cx - 6, hairY - 2, 12, 3);
-      // Subtle crown design
+      ctx.fillRect(cx - 7, hairY - 2, 14, 4);
       ctx.fillStyle = hairAccent;
-      ctx.fillRect(cx - 3, hairY - 1, 6, 1);
+      ctx.fillRect(cx - 4, hairY - 1, 8, 1.5);
     } else if (hairStyle.id.includes('twist')) {
-      // Two-strand twists
-      ctx.fillRect(cx - 9, hairY - 3, 18, 6);
+      // Detailed two-strand twists
+      ctx.fillRect(cx - 10, hairY - 4, 20, 7);
       ctx.fillStyle = hairAccent;
-      for (let i = -7; i <= 7; i += 2) {
-        ctx.fillRect(cx + i, hairY + 3, 1.5, 16);
+      for (let i = -8; i <= 8; i += 2) {
+        ctx.fillRect(cx + i, hairY + 2, 1.8, 18);
       }
     } else {
-      // Default short / twists with more shape
-      ctx.fillRect(cx - 10, hairY - 4, 20, 8);
+      // Default short styles with better shape and texture
+      ctx.fillRect(cx - 11, hairY - 5, 22, 9);
       ctx.fillStyle = hairAccent;
-      ctx.fillRect(cx - 6, hairY - 6, 12, 3);
+      ctx.fillRect(cx - 7, hairY - 7, 14, 4);
     }
 
     // Headwear

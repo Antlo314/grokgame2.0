@@ -26,11 +26,15 @@ export class PlayerRenderer {
     const clothDark = '#1C2526';
     const clothMid = '#2F3A3C';
 
-    // === LEGS (better silhouette) ===
+    // === LEGS (better silhouette + simple shading) ===
     const legs = scene.add.graphics();
     legs.fillStyle(0x12161f, 1);
     legs.fillRect(-6, 6, 5, 10);
     legs.fillRect(1, 6, 5, 10);
+    // Subtle leg shading
+    legs.fillStyle(0x0F121A, 0.6);
+    legs.fillRect(-6, 10, 2, 6);
+    legs.fillRect(4, 10, 2, 6);
     container.add(legs);
 
     // === TORSO + CLOTHING (greatly improved) ===

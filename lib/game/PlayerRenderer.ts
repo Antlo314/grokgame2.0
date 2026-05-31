@@ -33,36 +33,44 @@ export class PlayerRenderer {
     legs.fillRect(1, 6, 5, 10);
     container.add(legs);
 
-    // === TORSO + CLOTHING (detailed based on choice) ===
+    // === TORSO + CLOTHING (greatly improved) ===
     const torso = scene.add.graphics();
     torso.fillStyle(parseInt(clothDark.replace('#', '0x')), 1);
     torso.fillRect(-7, -3, 14, 10);
 
     const clothingId = config.clothing.id;
 
-    // Hoodie / tactical
     if (clothingId.includes('hoodie') || clothingId.includes('Street')) {
       torso.fillStyle(parseInt(clothMid.replace('#', '0x')), 1);
-      torso.fillRect(-8, -5, 16, 7); // hood
-      torso.fillStyle(parseInt(gold.replace('#', '0x')), 0.7);
-      for (let i = -5; i <= 5; i += 3) torso.fillRect(i, 0, 2, 1); // ley embroidery
+      torso.fillRect(-9, -6, 18, 8);
+      torso.fillStyle(parseInt(gold.replace('#', '0x')), 0.65);
+      for (let i = -6; i <= 6; i += 3) {
+        torso.fillRect(i, 1, 2, 1);
+      }
+      torso.fillStyle(0x0F121A, 0.5);
+      torso.fillRect(-4, 4, 8, 3);
     } 
-    // Bomber / leather
     else if (clothingId.includes('bomber')) {
       torso.fillStyle(0x3A2A1F, 1);
-      torso.fillRect(-7, -2, 14, 8);
-      torso.fillStyle(parseInt(gold.replace('#', '0x')), 0.6);
-      torso.fillRect(-3, 2, 6, 2); // patch
+      torso.fillRect(-7, -2, 14, 9);
+      torso.fillStyle(parseInt(gold.replace('#', '0x')), 0.55);
+      torso.fillRect(-4, 3, 8, 2);
+      torso.fillRect(-5, -1, 3, 1);
+      torso.fillRect(2, -1, 3, 1);
     } 
-    // Dashiki fusion
     else if (clothingId.includes('dashiki')) {
       torso.fillStyle(0x4A3728, 1);
-      torso.fillRect(-6, -2, 12, 9);
+      torso.fillRect(-6, -2, 12, 10);
+      torso.fillStyle(0x2A1F15, 0.45);
+      for (let i = -4; i <= 4; i += 3) {
+        torso.fillRect(i, 1, 2, 6);
+      }
     } 
-    // Long coat
     else if (clothingId.includes('coat')) {
       torso.fillStyle(0x1A1F2E, 1);
-      torso.fillRect(-8, -4, 16, 14);
+      torso.fillRect(-8, -5, 16, 15);
+      torso.fillStyle(0x12161F, 0.6);
+      torso.fillRect(-5, 2, 10, 8);
     }
 
     container.add(torso);
@@ -84,37 +92,50 @@ export class PlayerRenderer {
     head.fillRect(-5, -14, 10, 12);
     container.add(head);
 
-    // === HAIR (much more detailed per style) ===
+    // === HAIR (greatly improved detail) ===
     const hairGfx = scene.add.graphics();
     hairGfx.fillStyle(parseInt(hair.replace('#', '0x')), 1);
 
     const style = config.hairStyle.id;
 
     if (style.includes('loc')) {
-      // Long locs - segmented ropes
-      for (let i = -6; i <= 6; i += 2.8) {
-        hairGfx.fillRect(i - 0.7, -16, 1.6, 20);
-        hairGfx.fillStyle(parseInt(hairAccent.replace('#', '0x')), 0.8);
-        hairGfx.fillRect(i - 0.3, 2, 0.8, 3); // bead
+      // Long locs - much better volume and beads
+      for (let i = -6; i <= 6; i += 2.5) {
+        hairGfx.fillRect(i - 0.8, -17, 2, 22);
+        hairGfx.fillRect(i - 0.4, -15, 1.2, 18);
+        hairGfx.fillStyle(parseInt(hairAccent.replace('#', '0x')), 0.75);
+        hairGfx.fillRect(i, 3, 1, 4);
         hairGfx.fillStyle(parseInt(hair.replace('#', '0x')), 1);
       }
     } else if (style.includes('afro') || style.includes('puff')) {
-      hairGfx.fillCircle(0, -11, 9.5);
-      hairGfx.fillStyle(parseInt(hairAccent.replace('#', '0x')), 0.55);
-      for (let i = -7; i < 8; i += 2.5) for (let j = -8; j < 4; j += 2.5) hairGfx.fillRect(i, j - 11, 1, 1);
-    } else if (style.includes('braid') || style.includes('cornrow')) {
-      hairGfx.fillRect(-8, -16, 16, 5);
-      hairGfx.fillStyle(parseInt(hairAccent.replace('#', '0x')), 0.7);
-      for (let i = -6; i <= 6; i += 3) hairGfx.fillRect(i - 0.5, -11, 1.2, 16);
-    } else if (style.includes('fade') || style === 'curly_taper') {
-      hairGfx.fillRect(-8, -16, 16, 4);
+      hairGfx.fillCircle(0, -11, 10);
       hairGfx.fillStyle(parseInt(hairAccent.replace('#', '0x')), 0.5);
-      hairGfx.fillRect(-5, -18, 10, 3);
+      for (let i = -8; i < 9; i += 2) {
+        for (let j = -9; j < 5; j += 2) {
+          if ((i + j) % 3 !== 0) hairGfx.fillRect(i, j - 11, 1, 1);
+        }
+      }
+    } else if (style.includes('braid') || style.includes('cornrow')) {
+      hairGfx.fillRect(-9, -17, 18, 6);
+      hairGfx.fillStyle(parseInt(hairAccent.replace('#', '0x')), 0.65);
+      for (let i = -7; i <= 7; i += 3) {
+        hairGfx.fillRect(i - 0.5, -11, 1.5, 17);
+      }
+    } else if (style.includes('fade') || style === 'curly_taper') {
+      hairGfx.fillRect(-9, -17, 18, 5);
+      hairGfx.fillStyle(parseInt(hairAccent.replace('#', '0x')), 0.45);
+      hairGfx.fillRect(-6, -19, 12, 4);
     } else if (style === 'bald_crown') {
       hairGfx.fillStyle(0x1F1A18, 1);
-      hairGfx.fillRect(-5, -16, 10, 2);
+      hairGfx.fillRect(-6, -17, 12, 3);
+    } else if (style.includes('twist')) {
+      hairGfx.fillRect(-8, -17, 16, 6);
+      hairGfx.fillStyle(parseInt(hairAccent.replace('#', '0x')), 0.6);
+      for (let i = -6; i <= 6; i += 2) {
+        hairGfx.fillRect(i, -11, 1.5, 16);
+      }
     } else {
-      hairGfx.fillRect(-7, -16, 14, 5);
+      hairGfx.fillRect(-8, -17, 16, 6);
     }
     container.add(hairGfx);
 

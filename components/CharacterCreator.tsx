@@ -190,95 +190,153 @@ export default function CharacterCreator({ onComplete, onBack }: CharacterCreato
     ctx.fillStyle = clothDark;
     ctx.fillRect(cx - shoulderW/2, bodyTop, shoulderW, torsoH);
 
-    // Clothing detail (simple 32-bit patterns)
+    // Clothing detail (MUCH more detailed 32-bit style)
     ctx.fillStyle = clothMid;
     if (cloth.includes('hoodie') || cloth.includes('Street')) {
-      // Hood shape
-      ctx.fillRect(cx - 11, bodyTop - 6, 22, 10);
-      ctx.fillStyle = gold; // embroidery ley lines
-      for (let i = -6; i <= 6; i += 3) ctx.fillRect(cx + i, bodyTop + 4, 2, 1);
+      // Rich hoodie with hood + details
+      ctx.fillRect(cx - 12, bodyTop - 7, 24, 11);
+      ctx.fillStyle = gold;
+      for (let i = -7; i <= 7; i += 3) {
+        ctx.fillRect(cx + i, bodyTop + 3, 2, 1);
+        ctx.fillRect(cx + i + 1, bodyTop + 6, 1, 1);
+      }
+      ctx.fillStyle = '#0F121A';
+      ctx.fillRect(cx - 5, bodyTop + 9, 10, 4); // pocket
     } else if (cloth.includes('bomber')) {
-      ctx.fillRect(cx - shoulderW/2 + 3, bodyTop + 6, shoulderW - 6, 8);
+      ctx.fillRect(cx - shoulderW/2 + 2, bodyTop + 5, shoulderW - 4, 9);
+      ctx.fillStyle = gold;
+      ctx.fillRect(cx - 4, bodyTop + 8, 8, 2);
+      ctx.fillRect(cx - 6, bodyTop + 4, 3, 1);
+      ctx.fillRect(cx + 3, bodyTop + 4, 3, 1);
     } else if (cloth.includes('dashiki')) {
       ctx.fillStyle = '#3A2A1F';
-      ctx.fillRect(cx - 8, bodyTop + 2, 16, torsoH - 4);
+      ctx.fillRect(cx - 8, bodyTop + 1, 16, torsoH - 3);
+      ctx.fillStyle = '#2A1F15';
+      for (let i = -5; i <= 5; i += 4) {
+        ctx.fillRect(cx + i, bodyTop + 4, 2, torsoH - 8);
+      }
+    } else if (cloth.includes('coat')) {
+      ctx.fillStyle = '#1A1F2E';
+      ctx.fillRect(cx - shoulderW/2 - 1, bodyTop - 1, shoulderW + 2, torsoH + 2);
+      ctx.fillStyle = '#12161F';
+      ctx.fillRect(cx - 4, bodyTop + 3, 8, torsoH - 6);
     }
 
-    // Arms (simple)
+    // Arms (with simple cuffs)
     ctx.fillStyle = skin;
     const armY = bodyTop + 4;
     ctx.fillRect(cx - shoulderW/2 - 6, armY, 6, 14);
     ctx.fillRect(cx + shoulderW/2, armY, 6, 14);
+    ctx.fillStyle = clothDark;
+    ctx.fillRect(cx - shoulderW/2 - 6, armY + 11, 6, 3);
+    ctx.fillRect(cx + shoulderW/2, armY + 11, 6, 3);
 
-    // === HEAD ===
+    // === HEAD (much more detailed face) ===
     ctx.fillStyle = skin;
     ctx.fillRect(cx - headW/2, headY, headW, headH);
 
-    // Subtle jaw / cheek definition (32-bit)
+    // Ears (simple but important)
+    ctx.fillStyle = shadow;
+    ctx.fillRect(cx - headW/2 - 2, headY + 8, 3, 5);
+    ctx.fillRect(cx + headW/2 - 1, headY + 8, 3, 5);
+
+    // Jaw / cheek definition (stronger)
     ctx.fillStyle = shadow;
     if (isMasc || presentation === 'androgynous') {
-      ctx.fillRect(cx - headW/2 + 2, headY + 14, headW - 4, 6);
+      ctx.fillRect(cx - headW/2 + 1, headY + 13, headW - 2, 7);
+    } else {
+      ctx.fillRect(cx - headW/2 + 2, headY + 14, headW - 4, 5);
     }
 
-    // Eyes (chunky pixels)
-    ctx.fillStyle = '#111';
+    // Eyes (better shape + whites)
+    ctx.fillStyle = '#E8E0D0';
     const eyeY = headY + 9;
     const eyeSpacing = presentation === 'feminine' ? 5 : 4;
     ctx.fillRect(cx - eyeSpacing - 2, eyeY, 4, 3);
     ctx.fillRect(cx + eyeSpacing - 2, eyeY, 4, 3);
+    ctx.fillStyle = '#111';
+    ctx.fillRect(cx - eyeSpacing - 1, eyeY + 1, 2, 1);
+    ctx.fillRect(cx + eyeSpacing - 1, eyeY + 1, 2, 1);
 
-    // Eyebrows
+    // Eyebrows (thicker + shaped)
     ctx.fillStyle = '#1A1A1A';
-    ctx.fillRect(cx - eyeSpacing - 3, eyeY - 3, 5, 1);
-    ctx.fillRect(cx + eyeSpacing - 2, eyeY - 3, 5, 1);
+    ctx.fillRect(cx - eyeSpacing - 3, eyeY - 3, 6, 1);
+    ctx.fillRect(cx + eyeSpacing - 2, eyeY - 3, 6, 1);
 
-    // Nose (broad strength default)
+    // Nose (better definition)
     ctx.fillStyle = shadow;
-    ctx.fillRect(cx - 1, headY + 12, 2, 5);
+    ctx.fillRect(cx - 1, headY + 11, 2, 6);
+    ctx.fillRect(cx - 2, headY + 15, 4, 1);
 
-    // Lips
+    // Lips (more shape)
     ctx.fillStyle = '#3A2520';
     const lipY = headY + 18;
-    ctx.fillRect(cx - 4, lipY, 8, 2);
-    if (face.lips.includes('Full')) ctx.fillRect(cx - 5, lipY + 1, 10, 1);
+    ctx.fillRect(cx - 5, lipY, 10, 2);
+    if (face.lips.includes('Full')) {
+      ctx.fillRect(cx - 5, lipY + 1, 10, 1);
+    }
 
-    // === HAIR (the star — many styles, chunky silhouettes) ===
+    // === HAIR (greatly improved detail) ===
     ctx.fillStyle = hair;
     const hairY = headY - 2;
 
     if (hairStyle.id === 'long_locs' || hairStyle.id === 'back_locs') {
-      // Long locs — vertical chunky ropes
-      for (let i = -7; i <= 7; i += 3) {
-        ctx.fillRect(cx + i - 1, hairY - 4, 3, 32);
+      // Long locs with better volume and detail
+      for (let i = -7; i <= 7; i += 2.5) {
+        ctx.fillRect(cx + i - 1, hairY - 5, 2.5, 34);
+        // Add variation for more organic look
+        ctx.fillRect(cx + i - 0.5, hairY - 3, 1.5, 30);
         ctx.fillStyle = hairAccent;
-        ctx.fillRect(cx + i, hairY + 18, 1, 8); // tip beads
+        ctx.fillRect(cx + i, hairY + 22, 1.2, 6); // beads
         ctx.fillStyle = hair;
       }
     } else if (hairStyle.id.includes('afro') || hairStyle.id.includes('puff')) {
-      // Big textured afro / puff
-      ctx.fillRect(cx - 13, hairY - 10, 26, 18);
-      // Dither texture
+      // Much more detailed afro/puff with volume
+      ctx.fillRect(cx - 14, hairY - 12, 28, 22);
       ctx.fillStyle = hairAccent;
-      for (let x = -11; x < 11; x += 3) for (let y = -8; y < 6; y += 3) ctx.fillRect(cx + x, hairY + y, 1, 1);
-    } else if (hairStyle.id.includes('braids') || hairStyle.id.includes('cornrows')) {
-      // Braids / cornrows — diagonal segments
-      ctx.fillRect(cx - 10, hairY - 2, 20, 6);
-      ctx.fillStyle = hairAccent;
-      for (let i = -8; i < 9; i += 4) {
-        ctx.fillRect(cx + i, hairY + 3, 2, 14);
+      // Multiple layers of texture for richer look
+      for (let x = -12; x < 13; x += 2) {
+        for (let y = -10; y < 8; y += 2) {
+          if ((x + y) % 3 !== 0) {
+            ctx.fillRect(cx + x, hairY + y - 1, 1, 1);
+          }
+        }
       }
-    } else if (hairStyle.id.includes('fade') || hairStyle.id === 'curly_taper') {
-      // Fade / taper
-      ctx.fillRect(cx - 10, hairY - 1, 20, 5);
+      ctx.fillStyle = hair;
+    } else if (hairStyle.id.includes('braids') || hairStyle.id.includes('cornrows')) {
+      // Much better braids/cornrows with pattern
+      ctx.fillRect(cx - 11, hairY - 3, 22, 7);
       ctx.fillStyle = hairAccent;
-      ctx.fillRect(cx - 6, hairY - 3, 12, 3);
+      for (let i = -9; i <= 9; i += 3) {
+        ctx.fillRect(cx + i - 0.5, hairY + 4, 1.5, 18);
+        ctx.fillRect(cx + i + 0.5, hairY + 6, 1, 14);
+      }
+      ctx.fillStyle = hair;
+    } else if (hairStyle.id.includes('fade') || hairStyle.id === 'curly_taper') {
+      // Better fades with more shape
+      ctx.fillRect(cx - 11, hairY - 2, 22, 6);
+      ctx.fillStyle = hairAccent;
+      ctx.fillRect(cx - 7, hairY - 5, 14, 4);
+      ctx.fillStyle = hair;
+      ctx.fillRect(cx - 4, hairY - 7, 8, 3);
     } else if (hairStyle.id === 'bald_crown') {
-      // Bald with subtle crown etch
       ctx.fillStyle = '#1F1A18';
-      ctx.fillRect(cx - 7, hairY - 1, 14, 3);
+      ctx.fillRect(cx - 6, hairY - 2, 12, 3);
+      // Subtle crown design
+      ctx.fillStyle = hairAccent;
+      ctx.fillRect(cx - 3, hairY - 1, 6, 1);
+    } else if (hairStyle.id.includes('twist')) {
+      // Two-strand twists
+      ctx.fillRect(cx - 9, hairY - 3, 18, 6);
+      ctx.fillStyle = hairAccent;
+      for (let i = -7; i <= 7; i += 2) {
+        ctx.fillRect(cx + i, hairY + 3, 1.5, 16);
+      }
     } else {
-      // Default short / twists
-      ctx.fillRect(cx - 10, hairY - 3, 20, 7);
+      // Default short / twists with more shape
+      ctx.fillRect(cx - 10, hairY - 4, 20, 8);
+      ctx.fillStyle = hairAccent;
+      ctx.fillRect(cx - 6, hairY - 6, 12, 3);
     }
 
     // Headwear
